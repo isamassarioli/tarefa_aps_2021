@@ -1,7 +1,6 @@
 package cdp;
 
 import java.util.Date;
-import ciu.JanCadTurma;
 
 public class Turma {
     private String horario;
@@ -9,7 +8,6 @@ public class Turma {
     private boolean fechada;
     private Date dataInicio;
     private Date dataFim;
-    private JanCadTurma janCadTurma;
 
     public Turma(String horario, int limiteAlunos, boolean fechada, Date dataInicio, Date dataFim) {
         this.dataFim = dataFim;
@@ -18,4 +16,4 @@ public class Turma {
         this.horario = horario;
         this.limiteAlunos = 40;
     }
-    }
+}
