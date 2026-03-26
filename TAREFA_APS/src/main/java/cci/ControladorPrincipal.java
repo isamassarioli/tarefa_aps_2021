@@ -81,7 +81,7 @@ public class ControladorPrincipal {
         int r = (aplGerenciarCurso.criarCurso(IdCurso, nome, cargaHoraria));
             if (r == 0) {
                 JOptionPane.showMessageDialog(null, "Curso criado com sucesso", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-                janCadCurso.setVisible(false);
+                janCadCurso.dispose();
                 janPrincipal.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "O nome do curso deve ter ao menos 4 caracteres", "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -95,7 +95,7 @@ public class ControladorPrincipal {
             int a = aplGerenciarPessoas.criarAluno(nome, dataNascimento, CPF);
             if (a == 0) {
                 JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-                janCadAluno.setVisible(false);
+                janCadAluno.dispose();
                 janPrincipal.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "O nome do aluno deve ter ao menos 4 caracteres", "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -110,7 +110,7 @@ public class ControladorPrincipal {
             int p = aplGerenciarPessoas.criarProfessor(nome, dataNascimento, CPF, titulacao);
             if (p == 0) {
                 JOptionPane.showMessageDialog(null, "Professor cadastrado com sucesso", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-                janCadProfessor.setVisible(false);
+                janCadProfessor.dispose();
                 janPrincipal.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "O nome do professor deve ter ao menos 4 caracteres", "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -124,7 +124,7 @@ public class ControladorPrincipal {
             int g = aplGerenciarCurso.criarTurma(nome, limiteAlunos, fechada, dataInicio, dataFim);
             if (g == 0) {
                 JOptionPane.showMessageDialog(null, "Turma criado com sucesso", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-                janCadTurma.setVisible(false);
+                janCadTurma.dispose();
                 janPrincipal.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "O nome da turma deve ter ao menos 4 caracteres", "Erro!", JOptionPane.ERROR_MESSAGE);
