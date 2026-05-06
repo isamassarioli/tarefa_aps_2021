@@ -3,6 +3,7 @@ package cgd;
 import cdp.Turma;
 import cdp.Curso;
 import cdp.Professor;
+import cdp.Aluno;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,5 +172,88 @@ public class TurmaDAO {
             }
         }
         return cod;
+    }
+
+    // Métodos para gerenciar alunos na turma
+    public int adicionarAlunoTurma(int turmaId, long alunoCpf) {
+        int cod = -1;
+        sql = "INSERT INTO turma_alunos (turma_id, aluno_cpf) VALUES (?, ?)";
+        try {
+            pstmt = conexao.prepareStatement(sql);
+            pstmt.setInt(1, turmaId);
+            pstmt.setLong(2, alunoCpf);
+            cod = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao adicionar aluno à turma: " + e.getMessage());
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar PreparedStatement: " + e.getMessage());
+                }
+            }
+        }
+        return cod;
+    }
+
+    public int removerAlunoTurma(int turmaId, long alunoCpf) {
+        int cod = -1;
+        sql = "DELETE FROM turma_alunos WHERE turma_id = ? AND aluno_cpf = ?";
+        try {
+            pstmt = conexao.prepareStatement(sql);
+            pstmt.setInt(1, turmaId);
+            pstmt.setLong(2, alunoCpf);
+            cod = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao remover aluno da turma: " + e.getMessage());
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar PreparedStatement: " + e.getMessage());
+                }
+            }
+        }
+        return cod;
+    }
+
+    public List<Aluno> listarAlunosTurma(int turmaId) {
+        List<Aluno> alunos = new ArrayList<>();
+        sql = "SELECT p.cpf, p.nome, p.data_nascimento FROM turma_alunos ta " +
+              "JOIN aluno a ON ta.aluno_cpf = a.cpf " +
+              "JOIN pessoa p ON a.cpf = p.cpf WHERE ta.turma_id = ?";
+        try {
+            pstmt = conexao.prepareStatement(sql);
+            pstmt.setInt(1, turmaId);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Aluno aluno = new Aluno(
+                    rs.getString("nome"),
+                    rs.getDate("data_nascimento"),
+                    rs.getLong("cpf")
+                );
+                alunos.add(aluno);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar alunos da turma: " + e.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar ResultSet: " + e.getMessage());
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar PreparedStatement: " + e.getMessage());
+                }
+            }
+        }
+        return alunos;
     }
 }

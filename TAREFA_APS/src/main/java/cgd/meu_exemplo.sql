@@ -39,13 +39,15 @@ CREATE TABLE turma (
     FOREIGN KEY (professor_cpf) REFERENCES professor(cpf) ON DELETE CASCADE
 );
 
--- Tabela Matrícula (relação muitos-para-muitos entre Aluno e Turma)
-CREATE TABLE matricula (
-    aluno_cpf bigint NOT NULL,
+-- Tabela turma_alunos (relação muitos-para-muitos entre Turma e Aluno, sem atributos de matrícula)
+CREATE TABLE turma_alunos (
     turma_id int NOT NULL,
-    nota int,
-    data_matricula timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (aluno_cpf, turma_id),
-    FOREIGN KEY (aluno_cpf) REFERENCES aluno(cpf) ON DELETE CASCADE,
-    FOREIGN KEY (turma_id) REFERENCES turma(id) ON DELETE CASCADE
+    aluno_cpf bigint NOT NULL,
+    PRIMARY KEY (turma_id, aluno_cpf),
+    FOREIGN KEY (turma_id) REFERENCES turma(id) ON DELETE CASCADE,
+    FOREIGN KEY (aluno_cpf) REFERENCES aluno(cpf) ON DELETE CASCADE
 );
+
+-- Índices para melhor performance em queries
+CREATE INDEX idx_turma_alunos_turma ON turma_alunos(turma_id);
+CREATE INDEX idx_turma_alunos_aluno ON turma_alunos(aluno_cpf);

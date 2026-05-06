@@ -13,7 +13,7 @@ public class AlunoDAO {
     private ResultSet rs;
 
     public AlunoDAO() {
-        Conexao driver = new Conexao("meu_exemplo", "postgres", "isadora");
+        Conexao driver = new Conexao("meu_exemplo", "postgres", "postgre");
         conexao = driver.getConnection();
     }
 

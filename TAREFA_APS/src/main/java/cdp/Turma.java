@@ -1,6 +1,8 @@
 package cdp;
 
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Turma {
     private String horario;
@@ -10,6 +12,7 @@ public class Turma {
     private Date dataFim;
     private Curso curso;
     private Professor professor;
+    private List<Aluno> alunos;
 
     public Turma(String horario, int limiteAlunos, boolean fechada, Date dataInicio, Date dataFim) {
         this.dataFim = dataFim;
@@ -17,6 +20,7 @@ public class Turma {
         this.fechada = fechada;
         this.horario = horario;
         this.limiteAlunos = 40;
+        this.alunos = new ArrayList<>();
     }
 
     public Turma(String horario, int limiteAlunos, boolean fechada, Date dataInicio, Date dataFim, Curso curso, Professor professor) {
@@ -27,6 +31,7 @@ public class Turma {
         this.limiteAlunos = limiteAlunos;
         this.curso = curso;
         this.professor = professor;
+        this.alunos = new ArrayList<>();
     }
 
     public String getHorario() {
@@ -83,5 +88,19 @@ public class Turma {
 
     public void setProfessor(Professor professor) {
         this.professor = professor;
+    }
+
+    public List<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void adicionarAluno(Aluno aluno) {
+        if (alunos.size() < limiteAlunos && !alunos.contains(aluno)) {
+            alunos.add(aluno);
+        }
+    }
+
+    public void removerAluno(Aluno aluno) {
+        alunos.remove(aluno);
     }
 }
