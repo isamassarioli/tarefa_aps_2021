@@ -13,7 +13,7 @@ public class ProfessorDAO {
     private ResultSet rs;
 
     public ProfessorDAO() {
-        Conexao driver = new Conexao("meu_exemplo", "postgres", "isadora");
+        Conexao driver = new Conexao("meu_exemplo", "postgres", "postgre");
         conexao = driver.getConnection();
     }
 
@@ -69,6 +69,13 @@ public class ProfessorDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao buscar professor: " + e.getMessage());
         } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar ResultSet: " + e.getMessage());
+                }
+            }
             if (pstmt != null) {
                 try {
                     pstmt.close();
@@ -98,6 +105,13 @@ public class ProfessorDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao listar professores: " + e.getMessage());
         } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar ResultSet: " + e.getMessage());
+                }
+            }
             if (comando != null) {
                 try {
                     comando.close();

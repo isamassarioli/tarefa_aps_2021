@@ -118,7 +118,7 @@ public class JanPrincipal extends javax.swing.JFrame {
         });
         jMenuConsultas.add(jMenuItemProfList);
 
-        jMenuItemGradeCurso.setText("Grade de Cursos");
+        jMenuItemGradeCurso.setText("Listar Cursos");
         jMenuConsultas.add(jMenuItemGradeCurso);
 
         jMenuBar1.add(jMenuConsultas);

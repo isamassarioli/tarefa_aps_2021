@@ -66,6 +66,13 @@ public class AlunoDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao buscar aluno: " + e.getMessage());
         } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar ResultSet: " + e.getMessage());
+                }
+            }
             if (pstmt != null) {
                 try {
                     pstmt.close();
@@ -93,6 +100,13 @@ public class AlunoDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao listar alunos: " + e.getMessage());
         } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.out.println("Erro ao fechar ResultSet: " + e.getMessage());
+                }
+            }
             if (comando != null) {
                 try {
                     comando.close();

@@ -95,7 +95,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemGradeCurso">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Grade de Cursos"/>
+                <Property name="text" type="java.lang.String" value="Listar Cursos"/>
               </Properties>
             </MenuItem>
           </SubComponents>
