@@ -1,11 +1,33 @@
 package cdp;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
 
+@Entity
+@Table(name = "pessoa")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Pessoa {
-    private String nome;
-    private Date dataNascimento;
+    @Id
+    @Column(name = "cpf")
     private long CPF;
+
+    @Column(name = "nome")
+    private String nome;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "data_nascimento")
+    private Date dataNascimento;
+
+    public Pessoa() {
+        // Construtor padrão para JPA
+    }
 
     public Pessoa(String nome, Date dataNascimento, long CPF) {
         this.nome = nome;

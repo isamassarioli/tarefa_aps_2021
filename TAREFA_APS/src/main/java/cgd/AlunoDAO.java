@@ -1,165 +1,80 @@
 package cgd;
 
 import cdp.Aluno;
-import java.sql.*;
-import java.util.ArrayList;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 public class AlunoDAO {
-    private Connection conexao;
-    private PreparedStatement pstmt;
-    private String sql;
-    private Statement comando;
-    private ResultSet rs;
-
     public AlunoDAO() {
-        Conexao driver = new Conexao("meu_exemplo", "postgres", "postgre");
-        conexao = driver.getConnection();
     }
 
     public int save(Aluno aluno) {
-        int cod = -1;
-        sql = "INSERT INTO pessoa (cpf, nome, data_nascimento) VALUES (?, ?, ?)";
+        EntityManager em = JPAUtil.getEntityManager();
         try {
-            pstmt = conexao.prepareStatement(sql);
-            pstmt.setLong(1, aluno.getCPF());
-            pstmt.setString(2, aluno.getNome());
-            java.sql.Date sqlDate = new java.sql.Date(aluno.getDataNascimento().getTime());
-            pstmt.setDate(3, sqlDate);
-            cod = pstmt.executeUpdate();
-
-            // Inserir na tabela aluno
-            if (cod > 0) {
-                sql = "INSERT INTO aluno (cpf) VALUES (?)";
-                pstmt = conexao.prepareStatement(sql);
-                pstmt.setLong(1, aluno.getCPF());
-                cod = pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
+            em.getTransaction().begin();
+            em.persist(aluno);
+            em.getTransaction().commit();
+            return 1;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             System.out.println("Erro ao salvar aluno: " + e.getMessage());
-            cod = -1;
+            return -1;
         } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    System.out.println("Erro ao fechar PreparedStatement: " + e.getMessage());
-                }
-            }
+            em.close();
         }
-        return cod;
     }
 
     public Aluno get(long cpf) {
-        Aluno aluno = null;
-        sql = "SELECT p.cpf, p.nome, p.data_nascimento FROM pessoa p JOIN aluno a ON p.cpf = a.cpf WHERE p.cpf = ?";
+        EntityManager em = JPAUtil.getEntityManager();
         try {
-            pstmt = conexao.prepareStatement(sql);
-            pstmt.setLong(1, cpf);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                String nome = rs.getString("nome");
-                java.sql.Date sqlDate = rs.getDate("data_nascimento");
-                java.util.Date dataAtual = new java.util.Date(sqlDate.getTime());
-                aluno = new Aluno(nome, dataAtual, cpf);
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao buscar aluno: " + e.getMessage());
+            return em.find(Aluno.class, cpf);
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    System.out.println("Erro ao fechar ResultSet: " + e.getMessage());
-                }
-            }
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    System.out.println("Erro ao fechar PreparedStatement: " + e.getMessage());
-                }
-            }
+            em.close();
         }
-        return aluno;
     }
 
     public List<Aluno> getAll() {
-        List<Aluno> alunos = new ArrayList<>();
-        sql = "SELECT p.cpf, p.nome, p.data_nascimento FROM pessoa p JOIN aluno a ON p.cpf = a.cpf";
+        EntityManager em = JPAUtil.getEntityManager();
         try {
-            comando = conexao.createStatement();
-            rs = comando.executeQuery(sql);
-            while (rs.next()) {
-                long cpf = rs.getLong("cpf");
-                String nome = rs.getString("nome");
-                java.sql.Date sqlDate = rs.getDate("data_nascimento");
-                java.util.Date dataAtual = new java.util.Date(sqlDate.getTime());
-                alunos.add(new Aluno(nome, dataAtual, cpf));
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar alunos: " + e.getMessage());
+            TypedQuery<Aluno> query = em.createQuery("SELECT a FROM Aluno a", Aluno.class);
+            return query.getResultList();
         } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    System.out.println("Erro ao fechar ResultSet: " + e.getMessage());
-                }
-            }
-            if (comando != null) {
-                try {
-                    comando.close();
-                } catch (SQLException e) {
-                    System.out.println("Erro ao fechar Statement: " + e.getMessage());
-                }
-            }
+            em.close();
         }
-        return alunos;
     }
 
     public int update(Aluno aluno) {
-        int cod = -1;
-        sql = "UPDATE pessoa SET nome = ?, data_nascimento = ? WHERE cpf = ?";
+        EntityManager em = JPAUtil.getEntityManager();
         try {
-            pstmt = conexao.prepareStatement(sql);
-            pstmt.setString(1, aluno.getNome());
-            java.sql.Date sqlDate = new java.sql.Date(aluno.getDataNascimento().getTime());
-            pstmt.setDate(2, sqlDate);
-            pstmt.setLong(3, aluno.getCPF());
-            cod = pstmt.executeUpdate();
-        } catch (SQLException e) {
+            em.getTransaction().begin();
+            em.merge(aluno);
+            em.getTransaction().commit();
+            return 1;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             System.out.println("Erro ao atualizar aluno: " + e.getMessage());
+            return -1;
         } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    System.out.println("Erro ao fechar PreparedStatement: " + e.getMessage());
-                }
-            }
+            em.close();
         }
-        return cod;
     }
 
     public int delete(long cpf) {
-        int cod = -1;
-        sql = "DELETE FROM aluno WHERE cpf = ?";
+        EntityManager em = JPAUtil.getEntityManager();
         try {
-            pstmt = conexao.prepareStatement(sql);
-            pstmt.setLong(1, cpf);
-            cod = pstmt.executeUpdate();
-        } catch (SQLException e) {
+            Aluno aluno = em.find(Aluno.class, cpf);
+            if (aluno == null) return 0;
+            em.getTransaction().begin();
+            em.remove(aluno);
+            em.getTransaction().commit();
+            return 1;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             System.out.println("Erro ao deletar aluno: " + e.getMessage());
+            return -1;
         } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    System.out.println("Erro ao fechar PreparedStatement: " + e.getMessage());
-                }
-            }
+            em.close();
         }
-        return cod;
     }
 }

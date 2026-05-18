@@ -1,9 +1,28 @@
 package cdp;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "curso")
 public class Curso {
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "nome")
     private String nome;
+
+    @Column(name = "carga_horaria")
     private int cargaHoraria;
+
+    public Curso() {
+        // construtor JPA
+    }
 
     public Curso(int id, String nome, int cargaHoraria) {
         this.id = id;

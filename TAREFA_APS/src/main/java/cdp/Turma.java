@@ -1,18 +1,55 @@
 package cdp;
 
-import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "turma")
 public class Turma {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "horario")
     private String horario;
+
+    @Column(name = "limite_alunos")
     private int limiteAlunos;
+
+    @Column(name = "fechada")
     private boolean fechada;
+
+    @Column(name = "data_inicio")
     private Date dataInicio;
+
+    @Column(name = "data_fim")
     private Date dataFim;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "curso_id")
     private Curso curso;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "professor_id")
     private Professor professor;
+
+    @OneToMany
     private List<Aluno> alunos;
+
+    public Turma() {
+        this.alunos = new ArrayList<>();
+    }
 
     public Turma(String horario, int limiteAlunos, boolean fechada, Date dataInicio, Date dataFim) {
         this.dataFim = dataFim;
