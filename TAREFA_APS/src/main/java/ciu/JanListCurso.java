@@ -5,10 +5,10 @@
 package ciu;
 
 import cci.ControladorPrincipal;
-import cgt.AplGerenciarPessoas;
-import cdp.Aluno;
+// import cgt.AplGerenciarPessoas; // kept compatible with controller but not used
+import cgd.CursoService;
+import cdp.Curso;
 import javax.swing.table.DefaultTableModel;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,19 +18,21 @@ import java.util.List;
  */
 public class JanListCurso extends javax.swing.JFrame {
     
-    private List<Aluno> alunos;
-    private AplGerenciarPessoas apl;
+    private List<Curso> cursos;
+    private CursoService cursoService;
 
     /**
      * Creates new form JanListCurso
      */
     public JanListCurso() {
+        cursoService = new CursoService();
         initComponents();
         carregarDados();
     }
     
-    public JanListCurso(AplGerenciarPessoas apl) {
-        this.apl = apl;
+    public JanListCurso(cgt.AplGerenciarPessoas apl) {
+        // parameter accepted for backward compatibility with controller
+        cursoService = new CursoService();
         initComponents();
         carregarDados();
     }
@@ -59,7 +61,7 @@ public class JanListCurso extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Nome", "CPF", "Nascimento"
+                "ID", "Nome", "Carga Horária"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -119,36 +121,25 @@ public class JanListCurso extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void carregarDados() {
-        if (apl != null) {
-            alunos = apl.listarAlunos();
-        } else {
-            // try to create a local application layer if controller didn't provide one
-            try {
-                apl = new AplGerenciarPessoas();
-                alunos = apl.listarAlunos();
-            } catch (Exception ex) {
-                alunos = new ArrayList<>();
-            }
+        try {
+            cursos = cursoService.listarTodos();
+            if (cursos == null) cursos = new ArrayList<>();
+        } catch (Exception ex) {
+            cursos = new ArrayList<>();
         }
-        
+
         preencherTabela();
     }
 
     private void preencherTabela() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Limpa a tabela
-        
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        
-        for (Aluno aluno : alunos) {
-            String dataStr = "";
-            if (aluno.getDataNascimento() != null) {
-                dataStr = sdf.format(aluno.getDataNascimento());
-            }
+
+        for (Curso curso : cursos) {
             Object[] linha = {
-                aluno.getNome(),
-                aluno.getCPF(),
-                dataStr
+                curso.getId(),
+                curso.getNomeCurso(),
+                curso.getChCurso()
             };
             model.addRow(linha);
         }

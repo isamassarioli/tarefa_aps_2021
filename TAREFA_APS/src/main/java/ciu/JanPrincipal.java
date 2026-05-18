@@ -119,6 +119,11 @@ public class JanPrincipal extends javax.swing.JFrame {
         jMenuConsultas.add(jMenuItemProfList);
 
         jMenuItemGradeCurso.setText("Listar Cursos");
+        jMenuItemGradeCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemGradeCursoActionPerformed(evt);
+            }
+        });
         jMenuConsultas.add(jMenuItemGradeCurso);
 
         jMenuBar1.add(jMenuConsultas);
@@ -163,6 +168,10 @@ public class JanPrincipal extends javax.swing.JFrame {
  
         ControladorPrincipal.exibirJanCadProfessor();
     }//GEN-LAST:event_jMenuItemProfActionPerformed
+
+    private void jMenuItemGradeCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGradeCursoActionPerformed
+        ControladorPrincipal.exibirJanListCurso();
+    }//GEN-LAST:event_jMenuItemGradeCursoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
