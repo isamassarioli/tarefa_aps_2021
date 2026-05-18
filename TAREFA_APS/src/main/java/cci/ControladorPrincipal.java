@@ -13,6 +13,7 @@ import ciu.JanCadTurma;
 import ciu.JanPrincipal;
 import ciu.JanListAluno;
 import ciu.JanListProf;
+import ciu.JanListCurso;
 
 import java.util.Date;
 
@@ -29,6 +30,7 @@ public class ControladorPrincipal {
     private static JanCadProfessor janCadProfessor;
     private static JanListAluno janListAluno;
     private static JanListProf janListProf;
+    private static JanListCurso janListCurso;
     private static AplGerenciarCurso aplGerenciarCurso;
     private static AplGerenciarPessoas aplGerenciarPessoas;
     private static final ControladorPrincipal controlador = new ControladorPrincipal();
@@ -96,6 +98,16 @@ public class ControladorPrincipal {
             janListProf = new JanListProf(aplGerenciarPessoas);
         janPrincipal.setVisible(false);
         janListProf.setVisible(true);
+    }
+
+    public static void exibirJanListCurso() {
+        if (aplGerenciarPessoas == null)
+            aplGerenciarPessoas = new AplGerenciarPessoas();
+        
+        if (janListCurso == null)
+            janListCurso = new JanListCurso(aplGerenciarPessoas);
+        janPrincipal.setVisible(false);
+        janListCurso.setVisible(true);
     }
 
     public void cadastrarCurso(int IdCurso, String nome, int cargaHoraria) {
