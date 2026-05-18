@@ -8,7 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,10 +42,13 @@ public class Turma {
     private Curso curso;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "professor_id")
+    @JoinColumn(name = "professor_cpf", referencedColumnName = "cpf")
     private Professor professor;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "turma_alunos",
+        joinColumns = @JoinColumn(name = "turma_id"),
+        inverseJoinColumns = @JoinColumn(name = "aluno_cpf", referencedColumnName = "cpf"))
     private List<Aluno> alunos;
 
     public Turma() {

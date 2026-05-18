@@ -84,10 +84,14 @@ public class TurmaDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNativeQuery("INSERT INTO turma_alunos (turma_id, aluno_cpf) VALUES (?, ?)")
-                    .setParameter(1, turmaId)
-                    .setParameter(2, alunoCpf)
-                    .executeUpdate();
+            Turma turma = em.find(Turma.class, (long) turmaId);
+            Aluno aluno = em.find(Aluno.class, alunoCpf);
+            if (turma == null || aluno == null) {
+                em.getTransaction().rollback();
+                return 0;
+            }
+            turma.getAlunos().add(aluno);
+            em.merge(turma);
             em.getTransaction().commit();
             return 1;
         } catch (Exception e) {
@@ -103,10 +107,14 @@ public class TurmaDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNativeQuery("DELETE FROM turma_alunos WHERE turma_id = ? AND aluno_cpf = ?")
-                    .setParameter(1, turmaId)
-                    .setParameter(2, alunoCpf)
-                    .executeUpdate();
+            Turma turma = em.find(Turma.class, (long) turmaId);
+            Aluno aluno = em.find(Aluno.class, alunoCpf);
+            if (turma == null || aluno == null) {
+                em.getTransaction().rollback();
+                return 0;
+            }
+            turma.getAlunos().remove(aluno);
+            em.merge(turma);
             em.getTransaction().commit();
             return 1;
         } catch (Exception e) {
@@ -121,20 +129,11 @@ public class TurmaDAO {
     public List<Aluno> listarAlunosTurma(int turmaId) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            @SuppressWarnings("unchecked")
-            List<Object[]> rows = em.createNativeQuery(
-                    "SELECT ta.aluno_cpf FROM turma_alunos ta WHERE ta.turma_id = ?")
-                    .setParameter(1, turmaId)
-                    .getResultList();
-
-            List<Aluno> alunos = new java.util.ArrayList<>();
-            for (Object row : rows) {
-                Number cpfNum = (Number) row;
-                long cpf = cpfNum.longValue();
-                Aluno aluno = em.find(Aluno.class, cpf);
-                if (aluno != null) alunos.add(aluno);
-            }
-            return alunos;
+            Turma turma = em.find(Turma.class, (long) turmaId);
+            if (turma == null) return new java.util.ArrayList<>();
+            // força inicialização da coleção, caso LAZY
+            turma.getAlunos().size();
+            return turma.getAlunos();
         } finally {
             em.close();
         }
