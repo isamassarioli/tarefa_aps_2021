@@ -1,0 +1,56 @@
+@startuml
+' PlantUML diagram for JPA-mapped entities
+skinparam classAttributeIconSize 0
+
+package "cdp (entities)" {
+  class Pessoa {
+    +String nome
+    +String cpf <<PK>>
+    +Date dataNascimento
+  }
+
+  class Aluno {
+    +List<Turma> turmas
+  }
+
+  class Professor {
+    +String titulacao
+  }
+
+  class Curso {
+    +Long id <<PK>>
+    +String nome
+    +int cargaHoraria
+  }
+
+  class Turma {
+    +Long id <<PK>>
+    +String horario
+    +int limiteAlunos
+    +boolean fechada
+    +Date dataInicio
+    +Date dataFim
+    +Long curso_id <<FK>>
+    +String professor_cpf <<FK>>
+  }
+}
+
+' Inheritance
+Pessoa <|-- Aluno
+Pessoa <|-- Professor
+
+' Relations
+Curso "1" -- "0..*" Turma : possui
+Professor "1" -- "0..*" Turma : leciona
+Turma "*" -- "*" Aluno : alunos
+
+'
+'join table annotation
+note "Join table: turma_alunos (turma_id INT FK -> turma.id, aluno_cpf BIGINT FK -> pessoa.cpf)" as N
+N .. Turma
+N .. Aluno
+
+note "Turma joins to Professor via professor_cpf -> pessoa.cpf" as P
+P .. Turma
+
+@enduml
